@@ -1,5 +1,5 @@
 function hwl(name, volume) {
-    return new Howl({src: ["sounds/" + name + ".wav"], volume: volume || 1});
+    return new Howl({src: ["sounds/" + name + ".mp3"], volume: volume || 1});
 }
 
 // Load data
@@ -11,6 +11,7 @@ function ajax(file, callback) {
 }
 
 var ready = false;
+var clicked = false;
 
 const yScale = 0.8;
 
@@ -220,7 +221,7 @@ function tick(ms) {
 	c.fillStyle = "#292929";
 	c.fillRect(0, 0, canvas.width, canvas.height);
 	animTime += ms;
-	if (animTime < 3000) {
+	if (!clicked) {
 		blit(1507, 29, 520, 340, canvas.width / 2 - 520 / 2, canvas.height / 2 - 340 / 2);
 		return;
 	}
@@ -504,9 +505,13 @@ function down(key) {
 
 $('body').keyup(canvasKeyUp).keydown(canvasKeyDown);
 
-// Listen for mouse stuff.
 function canvasClick(e) {
     click = { "x": e.offsetX, "y": e.offsetY };
+    if (!clicked) {
+    	hwl("uruklow", 0.5).play();
+    	$('#gameCanvas').css("cursor", "none");
+    }
+    clicked = true;
 }
 
 function canvasMouseDown(e) {
