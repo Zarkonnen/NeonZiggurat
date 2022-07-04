@@ -11,7 +11,8 @@ function ajax(file, callback) {
 }
 
 var ready = false;
-var clicked = false;
+var splash = true;
+var intro = true;
 
 const yScale = 0.8;
 
@@ -220,13 +221,29 @@ ajax("map.txt", function(data) {
 function tick(ms) {
 	c.fillStyle = "#292929";
 	c.fillRect(0, 0, canvas.width, canvas.height);
-	animTime += ms;
-	if (!clicked) {
+	if (splash) {
 		blit(1507, 29, 520, 340, canvas.width / 2 - 520 / 2, canvas.height / 2 - 340 / 2);
+		if (click) {
+			click = false;
+			splash = false;
+			hwl("uruklow", 0.5).play();
+		}
 		return;
 	}
 
 	if (!ready) { return; }
+	
+	animTime += ms;
+	
+	if (intro) {
+		blit(1445, 380, 550, 330, canvas.width / 2 - 550 / 2, canvas.height / 2 - 330 / 2);
+		if (click) {
+			click = false;
+			intro = false;
+    		$('#gameCanvas').css("cursor", "none");
+		}
+		return;
+	}
 	
 	if (editor) {
 		if (down("W")) {
@@ -507,11 +524,6 @@ $('body').keyup(canvasKeyUp).keydown(canvasKeyDown);
 
 function canvasClick(e) {
     click = { "x": e.offsetX, "y": e.offsetY };
-    if (!clicked) {
-    	hwl("uruklow", 0.5).play();
-    	$('#gameCanvas').css("cursor", "none");
-    }
-    clicked = true;
 }
 
 function canvasMouseDown(e) {
